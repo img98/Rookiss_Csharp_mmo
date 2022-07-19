@@ -25,6 +25,8 @@ namespace DataStructure_Algorithm
                 // 1*1000/30 을 쓰지말고 변수로 만들기 ex) const int WAIT_TICK = 1000/30 ;
                 #endregion
 
+                //입력
+                //로직
                 //렌더링
                 Console.SetCursorPosition(0, 0); // 무조건 커서를 0,0으로 회귀시킴. 이경우 writeline을 해도 한줄이 한줄을 지우며 무한히 출력됨.
                 Console.WriteLine("Hello World!");
