@@ -53,10 +53,17 @@ public class TestCollision : MonoBehaviour
             }
         }
         /* 특정 레이어만 쓰고싶다면 다음을 추가수정하면됨
-        int mask = (1 << 8); //비트연산자를 통해 8번을 키겠다. = 8번레이어만 쓰겠다. // 여기서 | ^을 통해 여러개 마스크 사용가능
+        int mask = (1 << 8); //비트연산자를 통해 8번을 키겠다. = 8번레이어만 쓰겠다.
+                             // 여기서 | ^을 통해 여러개 마스크 사용가능
                              // ex) 8번이나 9번을 키겠다. int mask = (1<<8) | (1<<9); 
         if (Physics.Raycast(ray, out hit, mask))
-            Debug.Log($"Raycast Camera @{hit.collider.gameObject.name}"); */
+            Debug.Log($"Raycast Camera @{hit.collider.gameObject.name}");
+        
+         위가 어려우면 다음방법도 있다.
+        LayerMask mask = LayerMask.GetMask("Monster") | LayerMask.GetMask("Wall");
+         */
+
+        
 
     }
 }
