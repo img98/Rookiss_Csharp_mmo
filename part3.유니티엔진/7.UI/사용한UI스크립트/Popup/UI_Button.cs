@@ -44,9 +44,9 @@ public class UI_Button : UI_Popup //앞으로 모든 ui는 UI_Base 기반으로 만들거니까
         //GetText((int)Texts.ScoreText).text = "Text Get v2."; //참고로 (int를 쓰는이유는 Texts.ScoreText를 int버전으로 받아들이기위함 이라고 이해하면된다.)
 
         GameObject go = GetImage((int)Images.ItemIcon).gameObject; //gameObject로 불러온 이유는, ItemIcon이라는 오브젝트에 UI_EventHandler를 추가하거나, UI_EventHandler로 변화를 줄것이기때문이다.
-        AddUIEvent(go, (PointerEventData data) => { go.transform.position = data.position; }, Define.UIEvent.Drag);
+        BindEvent(go, (PointerEventData data) => { go.transform.position = data.position; }, Define.UIEvent.Drag);
 
-        GetButton((int)Buttons.PointButton).gameObject.AddUIEvent(OnButtonClicked);
+        GetButton((int)Buttons.PointButton).gameObject.BindEvent(OnButtonClicked);
     }
 
     int _score = 0;

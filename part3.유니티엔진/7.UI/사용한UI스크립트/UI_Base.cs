@@ -6,9 +6,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_Base : MonoBehaviour
+public abstract class UI_Base : MonoBehaviour
 {
     protected Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>(); //클래스가 Type인, 유니티 오브젝트들을 배열로 저장해주세요 라는의미.
+
+    public abstract void Init(); //어쩌피 UI_base 자체로 쓸일은 없기에, virutal 대신 abstract를 사용하자. abstract = 이름만달아놓고 내용은 없으니, 하위에서 상속받은 애들에서 내용을 구현해라.
+ 
 
     protected void Bind<T>(Type type) where T : UnityEngine.Object//연결을 해주는데 enum에 있는 내용들을 전부 알아야되니, 런타임과 함께 확인이 가능한 reflection문법을 사용하자.
     {
@@ -43,8 +46,10 @@ public class UI_Base : MonoBehaviour
     { return Get<TextMeshProUGUI>(idx); }
     protected Button GetButton(int idx) { return Get<Button>(idx); }
     protected Image GetImage(int idx) { return Get<Image>(idx); }
+    protected GameObject GetObject(int idx) { return Get<GameObject>(idx); }
 
-    public static void AddUIEvent(GameObject go, Action<PointerEventData> action, Define.UIEvent type = Define.UIEvent.Click) //인자는 (대상, 행동, 어떤기능을 원하는지)
+
+    public static void BindEvent(GameObject go, Action<PointerEventData> action, Define.UIEvent type = Define.UIEvent.Click) //인자는 (대상, 행동, 어떤기능을 원하는지)
     {
         /* UI_EventHandler evt = go.GetComponent<UI_EventHandler>(); //위에서 찾은 go에서 UI_EventHandler라는 컴포넌트를 evt에 담은것
         if (evt == null) // 만약 오브젝트에 UI_EventHandler컴포넌트가 안달려있다면, 직접 달아준다.
