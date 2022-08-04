@@ -12,11 +12,6 @@ public class UI_Inven_Item : UI_Base // 얘는 독립적인 존재도 아니고, 하나만 존재
         ItemNameText,
     }
 
-    void Start()
-    {
-        Init();
-    }
-
     public override void Init()
     {
         Bind<GameObject>(typeof(GameObjects));//이러면 각각 text컴포넌트나 image컴포넌트를 물고있는걸 기준으로 찾아다주는게 아니라, 그냥 오브젝트의 이름이 저건지만 판별해서 바인딩해줌.결과는 같은데 로직이 아주조금 다르다.

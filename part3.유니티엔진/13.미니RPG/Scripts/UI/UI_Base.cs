@@ -12,6 +12,10 @@ public abstract class UI_Base : MonoBehaviour
 
     public abstract void Init(); //어쩌피 UI_base 자체로 쓸일은 없기에, virutal 대신 abstract를 사용하자. abstract = 이름만달아놓고 내용은 없으니, 하위에서 상속받은 애들에서 내용을 구현해라.
  
+    private void Start() //상위객체에서 Start를 해줬으니, 아래객체들은 Start를 안써도되고, 그냥 Init()만 정의해주면된다.
+    {
+        Init();
+    }
 
     protected void Bind<T>(Type type) where T : UnityEngine.Object//연결을 해주는데 enum에 있는 내용들을 전부 알아야되니, 런타임과 함께 확인이 가능한 reflection문법을 사용하자.
     {

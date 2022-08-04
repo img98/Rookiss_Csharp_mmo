@@ -26,10 +26,6 @@ public class UI_Button : UI_Popup //앞으로 모든 ui는 UI_Base 기반으로 만들거니까
         ItemIcon,
     }
 
-    private void Start()
-    {
-        Init();
-    }
 
     public override void Init()
     {

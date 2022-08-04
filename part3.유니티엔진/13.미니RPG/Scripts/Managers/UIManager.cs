@@ -39,7 +39,24 @@ public class UIManager
         }
     }
 
-    public T MakeSubItem<T>(Transform parent = null, string name = null) where T : UI_Base
+    public T MakeWorldSpaceUI<T>(Transform parent = null, string name = null) where T : UI_Base
+    {
+        if (string.IsNullOrEmpty(name))
+            name = typeof(T).Name;
+
+        GameObject go = Managers.Resource.Instantiate($"UI/WorldSpace/{name}");
+
+        if (parent != null)
+            go.transform.SetParent(parent);
+
+        Canvas canvas = go.GetOrAddComponent<Canvas>();
+        canvas.renderMode = RenderMode.WorldSpace;
+        canvas.worldCamera = Camera.main;
+
+        return Util.GetOrAddComponent<T>(go);
+    }
+
+    public T MakeSubItem<T>(Transform parent = null, string name = null) where T : UI_Base //프리팹엔 없는걸 동적으로 붙이기위한 함수
     {
         if (string.IsNullOrEmpty(name))
             name = typeof(T).Name;

@@ -55,6 +55,8 @@ public class PlayerController : MonoBehaviour
         Managers.Input.MouseAction -= OnMouseEvent;
         Managers.Input.MouseAction += OnMouseEvent;
 
+        Managers.UI.MakeWorldSpaceUI<UI_HPBar>(transform);
+
     }
 
     void UpdateDie()
@@ -113,7 +115,16 @@ public class PlayerController : MonoBehaviour
 
     void OnHitEvent()
     {
-        Debug.Log("OnHIt");
+
+        if(_lockTarget !=null)
+        {
+            Stat targetStat = _lockTarget.GetComponent<Stat>(); 
+            PlayerStat myStat = gameObject.GetComponent<PlayerStat>(); //지금은 플레이어컨트롤러에 달고있으니까 playerStat을 써도 된다.(참고로 playerStat에 좀더 들어있는게 많다는걸 유의)
+
+            int damage = Mathf.Max(0, myStat.Attack - targetStat.Defense);
+            Debug.Log(damage);
+            targetStat.Hp -= damage;
+        }
         
         if(_stopSkill)
         { 
