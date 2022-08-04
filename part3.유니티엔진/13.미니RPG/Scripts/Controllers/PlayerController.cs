@@ -14,6 +14,7 @@ public class PlayerController : BaseController
 
     public override void Init()
     {
+        WorldObjectType = Define.WorldObject.Player;
         _stat = gameObject.GetOrAddComponent<PlayerStat>();
 
         Managers.Input.MouseAction -= OnMouseEvent;
@@ -72,9 +73,10 @@ public class PlayerController : BaseController
 
         if(_lockTarget !=null)
         {
+            
             Stat targetStat = _lockTarget.GetComponent<Stat>(); 
             PlayerStat myStat = gameObject.GetComponent<PlayerStat>(); //지금은 플레이어컨트롤러에 달고있으니까 playerStat을 써도 된다.(참고로 playerStat에 좀더 들어있는게 많다는걸 유의)
-
+     
             int damage = Mathf.Max(0, myStat.Attack - targetStat.Defense);
             targetStat.Hp -= damage;
         }

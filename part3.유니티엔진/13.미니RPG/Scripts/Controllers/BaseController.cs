@@ -13,6 +13,8 @@ public abstract class BaseController : MonoBehaviour
     [SerializeField]
     protected GameObject _lockTarget;
 
+    public Define.WorldObject WorldObjectType { get; protected set; } = Define.WorldObject.Unknown;
+
     public virtual Define.State State //상속받은애들중 추가하고싶은 내용있는 애들은 이거갖고 바꾸라는뜻
     {
         get { return _state; }

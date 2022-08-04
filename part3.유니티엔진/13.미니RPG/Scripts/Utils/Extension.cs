@@ -15,5 +15,9 @@ public static class Extension //±»ÀÌ ÇÏ³ªÀÇ ½ºÅ©¸³Æ®¿¡¼­¸¸ ÇØ´ç ÇÔ¼ö±â´ÉÀ» È£ÃâÇ
     {
         UI_Base.BindEvent(go, action, type);
     }
-
+    
+    public static bool IsValid(this GameObject go)
+    {
+        return go != null && go.activeSelf;
+    }
 }

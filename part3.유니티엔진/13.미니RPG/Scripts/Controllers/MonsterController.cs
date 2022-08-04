@@ -15,23 +15,26 @@ public class MonsterController : BaseController
 
     public override void Init()
     {
-        _stat = gameObject.GetOrAddComponent<PlayerStat>();
+        WorldObjectType = Define.WorldObject.Monster;
+        _stat = gameObject.GetOrAddComponent<Stat>();
 
-        if (gameObject.GetComponentInChildren<UI_HPBar>() == null) 
+        if (gameObject.GetComponentInChildren<UI_HPBar>() == null)
             Managers.UI.MakeWorldSpaceUI<UI_HPBar>(transform);
     }
 
     protected override void UpdateIdle()
     {
-        Debug.Log("monster Update idle");
 
         //TODO :플레이어 몬스터 총괄 매니저생기면 옮길것
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player == null)
+        if (player == null) 
+        {
             return;
 
+        }
+
         float distance = (player.transform.position - transform.position).magnitude; //플레이어와 나까지의 거리
-        if(distance<=_scanRange) //플레이어가 내 애드범위에 있으면
+        if (distance <= _scanRange) //플레이어가 내 애드범위에 있으면
         {
             _lockTarget = player; //타겟팅잡고
 
@@ -44,8 +47,6 @@ public class MonsterController : BaseController
 
     protected override void UpdateMoving()
     {
-        Debug.Log("monster Update Moving");
-
         if (_lockTarget != null)
         {
             _destPos = _lockTarget.transform.position;
@@ -78,22 +79,29 @@ public class MonsterController : BaseController
 
     protected override void UpdateSkill()
     {
-        Vector3 dir = _lockTarget.transform.position - transform.position;
-        Quaternion quat = Quaternion.LookRotation(dir);
-        transform.rotation = Quaternion.Lerp(transform.rotation, quat, 20 * Time.deltaTime);
-    }
+        if (_lockTarget != null)
+        {
+            Vector3 dir = _lockTarget.transform.position - transform.position;
+            Quaternion quat = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Lerp(transform.rotation, quat, 20 * Time.deltaTime);
+        }
 
+    }
+    
     void OnHitEvent()
     {
         if (_lockTarget != null)
         {
             Stat targetStat = _lockTarget.GetComponent<Stat>();
-            Stat myStat = gameObject.GetComponent<Stat>();
-
-            int damage = Mathf.Max(0, myStat.Attack - targetStat.Defense);
+            int damage = Mathf.Max(0, _stat.Attack - targetStat.Defense);
             targetStat.Hp -= damage;
-
-            if(targetStat.Hp>0)
+            //temp 
+            if (targetStat.Hp <= 0)
+            {
+                Managers.Game.Despawn(targetStat.gameObject);
+            }
+            //
+            if (targetStat.Hp>0)
             {
                 float distance = (_lockTarget.transform.position - transform.position).magnitude;
                 if (distance <= _attackRange)
@@ -105,7 +113,6 @@ public class MonsterController : BaseController
             {
                 State = Define.State.Idle;
             }
-
         }
         else
         {

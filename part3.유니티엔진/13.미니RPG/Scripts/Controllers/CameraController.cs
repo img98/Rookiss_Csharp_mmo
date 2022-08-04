@@ -13,9 +13,10 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     GameObject _player = null; //컴포넌트 드래그드랍안했을때를 위한 초기화
 
+    public void SetPlayer(GameObject player) { _player = player; } //사실이런건 카메라매니저 같은걸 만드는게맞긴한데, 없으니까 그냥 대충하자
 
     void Start()
-    {
+    { 
         
     }
 
@@ -23,6 +24,9 @@ public class CameraController : MonoBehaviour
     {
         if (_mode == Define.CameraMode.QuarterView)
         {
+            if (_player.IsValid()==false)
+                return;
+
             RaycastHit hit;
             if (Physics.Raycast(_player.transform.position, _delta, out hit, _delta.magnitude, LayerMask.GetMask("Wall"))) //플레이어 위치에서, 캠방향으로, 레이캐스트해서 wall이 콜리젼 된다면
             {
