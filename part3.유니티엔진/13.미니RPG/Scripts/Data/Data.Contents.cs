@@ -9,8 +9,9 @@ namespace Data{ //나중에 Stat이라는 stat정보관련 스크립트를 만들건데, 그러면 아�
     public class Stat
     {
         public int level;
-        public int hp;
+        public int maxHp;
         public int attack;
+        public int totalExp;
     }
 
     [Serializable]

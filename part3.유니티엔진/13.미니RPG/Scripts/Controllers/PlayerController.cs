@@ -71,25 +71,20 @@ public class PlayerController : BaseController
     void OnHitEvent()
     {
 
-        if(_lockTarget !=null)
+        if (_lockTarget.IsValid() != false) //이걸 _lockTarget!=null 로 두면, 비활성화된 타겟을 계속 공격했다고 취급해서, 경험치가 계속 올라감.
         {
-            
-            Stat targetStat = _lockTarget.GetComponent<Stat>(); 
-            PlayerStat myStat = gameObject.GetComponent<PlayerStat>(); //지금은 플레이어컨트롤러에 달고있으니까 playerStat을 써도 된다.(참고로 playerStat에 좀더 들어있는게 많다는걸 유의)
-     
-            int damage = Mathf.Max(0, myStat.Attack - targetStat.Defense);
-            targetStat.Hp -= damage;
+            Stat targetStat = _lockTarget.GetComponent<Stat>();
+            targetStat.OnAttacked(_stat);
         }
-        
-        if(_stopSkill)
-        { 
+
+        if (_stopSkill)
+        {
             State = Define.State.Idle;
         }
         else
         {
             State = Define.State.Skill;
         }
-
     }
 
 
@@ -131,6 +126,7 @@ public class PlayerController : BaseController
                         _destPos = hit.point;
                         State = Define.State.Moving;
                         _stopSkill = false;
+
                         if (hit.collider.gameObject.layer == (int)Define.Layer.Monster)
                             _lockTarget = hit.collider.gameObject;
                         else

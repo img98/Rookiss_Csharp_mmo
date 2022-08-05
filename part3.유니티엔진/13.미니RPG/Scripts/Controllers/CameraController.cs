@@ -28,7 +28,7 @@ public class CameraController : MonoBehaviour
                 return;
 
             RaycastHit hit;
-            if (Physics.Raycast(_player.transform.position, _delta, out hit, _delta.magnitude, LayerMask.GetMask("Wall"))) //플레이어 위치에서, 캠방향으로, 레이캐스트해서 wall이 콜리젼 된다면
+            if (Physics.Raycast(_player.transform.position, _delta, out hit, _delta.magnitude, 1 << (int)Define.Layer.Block)) //플레이어 위치에서, 캠방향으로, 레이캐스트해서 Block이 콜리젼 된다면
             {
                 float dist = (hit.point - _player.transform.position).magnitude * 0.8f; //hit좌표와 플레이어 좌표의 차로 방향과 크기를 알수있고, 대충 0.8을 곱해서 벽보다 조금 앞으로 나오게한다. 
                 transform.position = _player.transform.position + _delta.normalized * dist; //normalized 한 이유는, 크기가 아니라 방향만을 갖고오기 위해서(크기는 dist에 담았다)

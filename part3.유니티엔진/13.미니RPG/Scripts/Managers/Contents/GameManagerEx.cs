@@ -8,6 +8,8 @@ public class GameManagerEx
     GameObject _player;//지금은 플레이어가 한명뿐이니 굳이 딕셔너리 안써도 된다.
     HashSet<GameObject> _monsters = new HashSet<GameObject>(); //해쉬셋 = 키 없는 Dictionary (아직 서버연동은 안했으니, 키ID가 없다. 그냥 해쉬셋으로도 충분)
 
+    public GameObject GetPlayer() { return _player; }
+
     public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
     {
         GameObject go = Managers.Resource.Instantiate(path, parent);

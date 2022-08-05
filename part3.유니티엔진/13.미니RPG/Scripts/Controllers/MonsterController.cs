@@ -26,7 +26,8 @@ public class MonsterController : BaseController
     {
 
         //TODO :플레이어 몬스터 총괄 매니저생기면 옮길것
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        //GameObject player = GameObject.FindGameObjectWithTag("Player"); //이것보단 GetPlayer로 게임매니저에서 player를 리턴하는 함수를 만드는게 좀더 최적화될거임
+        GameObject player = Managers.Game.GetPlayer();
         if (player == null) 
         {
             return;
@@ -90,17 +91,11 @@ public class MonsterController : BaseController
     
     void OnHitEvent()
     {
-        if (_lockTarget != null)
+        if (_lockTarget!=null)
         {
             Stat targetStat = _lockTarget.GetComponent<Stat>();
-            int damage = Mathf.Max(0, _stat.Attack - targetStat.Defense);
-            targetStat.Hp -= damage;
-            //temp 
-            if (targetStat.Hp <= 0)
-            {
-                Managers.Game.Despawn(targetStat.gameObject);
-            }
-            //
+            targetStat.OnAttacked(_stat); //타셋한테, 내_stat을 담은, 공격받음 이벤트가 일어나게 한다.
+
             if (targetStat.Hp>0)
             {
                 float distance = (_lockTarget.transform.position - transform.position).magnitude;
