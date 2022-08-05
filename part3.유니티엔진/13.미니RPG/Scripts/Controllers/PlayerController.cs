@@ -41,6 +41,7 @@ public class PlayerController : BaseController
 
         //이동로직
         Vector3 dir = _destPos - transform.position; //방향벡터 구하기
+        dir.y = 0;//다른 콜라이더타고 올라가지않게 0으로 높이조정
         if (dir.magnitude < 0.1f) // 도착했다면 //nma.Move가 정밀도가 그리높진않아서, 도착의 기준을 널널히해줬다.
             State = Define.State.Idle;
         else
@@ -63,15 +64,18 @@ public class PlayerController : BaseController
     }
     protected override void UpdateSkill()
     {
-        Vector3 dir = _lockTarget.transform.position - transform.position;
-        Quaternion quat = Quaternion.LookRotation(dir);
-        transform.rotation = Quaternion.Lerp(transform.rotation, quat, 20 * Time.deltaTime);
+        if (_lockTarget != null) //이 조건문이 필수다. 지금 몬스터가 poolable상태가 아니기에, 몬스터를 despawn하면 아래_lockTarget들이 null이 되어버려 크래쉬가남
+        {
+            Vector3 dir = _lockTarget.transform.position - transform.position;
+            Quaternion quat = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Lerp(transform.rotation, quat, 20 * Time.deltaTime);
+        }
     }
 
     void OnHitEvent()
     {
-
-        if (_lockTarget.IsValid() != false) //이걸 _lockTarget!=null 로 두면, 비활성화된 타겟을 계속 공격했다고 취급해서, 경험치가 계속 올라감.
+                
+        if (_lockTarget != null)
         {
             Stat targetStat = _lockTarget.GetComponent<Stat>();
             targetStat.OnAttacked(_stat);

@@ -42,7 +42,9 @@ public class Stat : MonoBehaviour
         Hp -= damage;
         if (Hp <= 0)
         {
-            Hp = 0;
+
+            Hp = 0; //이게 교수코드
+            //Hp = MaxHp; //다시 피채워서 풀에 돌려줘야되지않나?
             OnDead(attacker);
         }
     }

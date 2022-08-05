@@ -94,7 +94,7 @@ public class MonsterController : BaseController
         if (_lockTarget!=null)
         {
             Stat targetStat = _lockTarget.GetComponent<Stat>();
-            targetStat.OnAttacked(_stat); //타셋한테, 내_stat을 담은, 공격받음 이벤트가 일어나게 한다.
+            targetStat.OnAttacked(_stat); //타겟한테, 내_stat을 담은, 공격받음 이벤트가 일어나게 한다.
 
             if (targetStat.Hp>0)
             {
