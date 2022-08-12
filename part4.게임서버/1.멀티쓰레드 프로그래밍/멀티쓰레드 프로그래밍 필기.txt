@@ -185,3 +185,21 @@ lock명령문을 사용할수도 있고(내부적으로Monitor사용), spinlock�
 
 ! 필요할때만 lock이 잠기는것처럼 할수있는 Reader Writer Lock
 
+[ ReaderWriterLock 구현 ] =LockFree와 비슷 =어려움
+
+_flag라는 32비트 int값을 사용하여 구현. 맨앞 1비트는 사용하지않고(Unused), 15비트는 WriteThread ID, ReadCount는 16비트로 이용한다.
+해당 비트자리에 WriteMask, ReadMask를 씌워서 사용하게된다.
+
+락을 만들때 정해야하는 정책
+1. 재귀적 락을 허용할 것인가? (허용한다면, WriteLock->WriteLock (Ok) , WriteLock->ReadLock(Ok) , ReadLock->WriteLock (No) )
+2. 스핀락 정책(락 접속실패시 어떻게 할것인가? 무한반복, 양보, //실습같은경우는 5000번 반복하고 양보)
+
+사실 잘몰라도 이런걸 많이 쓰진않아서, 그때가서 다시 찾아보자.
+
+[ Thread Local Storage ] TLS
+쓰레드마다 고유하게 접근할 수 있는 전역변수
+
+쓰레드에서 동시적으로 일을할때 전역 공간에 있는 데이터가 내 업무가 끝나기도 전에 변경되는 것을 막기위해 lock을 썼었다. 그러나 lock이 많아지면 그만큼 리소스 손실이 커짐.
+그렇기에 TLS로 전역변수를 자기만 사용하는 공간으로 가져와서, 나(쓰레드)만이 사용할 수 있는 전역변수로써 사용하는것 
+
+
