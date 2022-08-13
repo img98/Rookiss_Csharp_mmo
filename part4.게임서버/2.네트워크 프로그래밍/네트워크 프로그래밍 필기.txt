@@ -74,3 +74,10 @@ send를 개선하는 과정에서 _pendingList를 추가시켜, 일일이 큐에
 
 더 개선하자면 OnRecvCompleted단계에서 들어오는 패킷량을 보고 ddos공격마냥 무의미한 데이터가 지속적으로 오면 disconnect를 해줄수있겠고,
 send에서 비록 BuffList를 통해 뭉쳐서 보냈지만, 이걸 더 뭉쳐서 해당 게임지역에서 일어난 데이터를 한번에 보내게 해도 성능 개선이 예상된다.
+
+[ Session #4 ]
+EventHandler를 통해 Session을 더욱 개선해보자.
+지금까지 send RegisterSend Disconnect OnRecvCompleted 등등 여러 로직을 만들었지만, 사실 실사용때는 OnSend, OnRecv등 사용을 위한 함수만 건드릴것이지, 로직에는 관심 없을것이다.
+위 사용부는 서버 프로그램에서 돌릴수있게, 세션에서 abstract class로 만들고, 서버에서 Session을 상속받은 GameSession이라는 클래스를 만들어 사용하자.
+
+즉, 엔진과 컨텐츠를 분리하는것임. (세션에서는 게임에서 멀할진 모르지만, RecvCompleted가 되면 OnRecv에게 콜백 사인을 줄거고, 서버에서는 왜 RecvComplete가 되는진 모르지만 OnRecv신호가오면 무슨일을 할지 코딩하는것)
