@@ -81,3 +81,15 @@ EventHandler를 통해 Session을 더욱 개선해보자.
 위 사용부는 서버 프로그램에서 돌릴수있게, 세션에서 abstract class로 만들고, 서버에서 Session을 상속받은 GameSession이라는 클래스를 만들어 사용하자.
 
 즉, 엔진과 컨텐츠를 분리하는것임. (세션에서는 게임에서 멀할진 모르지만, RecvCompleted가 되면 OnRecv에게 콜백 사인을 줄거고, 서버에서는 왜 RecvComplete가 되는진 모르지만 OnRecv신호가오면 무슨일을 할지 코딩하는것)
+
+[ Connector ]
+Listener의 반대역할을 하는 connector (반대라기보단, DummyClient가 서버에 connect요청을 보내는걸 말한다.)
+그동안은 socket.Connect(endPoint);를 통해 블락킹함수를 사용했지만, 계속해왔듯 논블락킹으로 바꾸려한다.
+
+커넥터는 client에서 서버로 보내는 요청인데 왜 커넥터를 서버에 구현하나?
+1. 연결과 receive send를 공용으로 쓰면 편하니까.
+2. 아이템만 관리하는 서버, npc만 관리하는 서버 처럼 분할해서 서버를 만드는경우, 서버가 다른서버랑 연결하려면 결국 connector가 필요함
+
+그런데 생각해보면 서버코어에 커넥터를 구현해서, DummyClient는 얘네를 갖다 쓸수가 없다.
+=> ServerCore의 속성으로 가서 출력형식을 '클래스 라이브러리'로 설정한다. =말그대로 라이브러리로 만든것
+이후, DummyClient와 Server에 가서 추가-프로젝트 참조 를 통해 ServerCore라이브러리를 참조하도록 하면된다.
