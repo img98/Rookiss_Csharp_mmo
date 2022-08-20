@@ -83,7 +83,35 @@ xml의 형식은 그냥 이해하려하지말고 따라써라. 쓰다보면 익�
 [ Packet Generator #2 ]
 결국 하고싶은게 뭐냐. PacketGenerator에서 패킷의 이름을 하나하나 꺼낼수 있으니, 그걸 이용해 xml의 {0} {1} 이런걸 채우는것
 
+[ Packet Generator #3 ] !이거 히트네
+애초에 바이트배열을 보내는 코드도 추가하자.
+애초에 바이트이니 BitConverter를 쓸필요없고, 그냥 배열로 넣어주면됨. 방식은 앞서했던것과 같다.
 
+이렇게 패킷포맷을 구조적으로 잘 만들었으면 후에 추가상황이 생겨도 잘 맞아돌아감.
+ex) 리스트내의 리스트를 또 만들고싶어서, PDL에 list내부에 새로운 list를 넣었다. 그리고 바로 실행했는데, 알아서 잘돌아가더라.
 
+?이상한점 : packetFormat.cs의 packetFormat을 보면 마지막 write후에 }}로 끝낼때 }}"; 이런식으로 끝내면 마지막 괄호 안나오던데 왜인지모르겠다? 꼭 줄바꿈을 해줘야 제대로 찍힌다.
+그런데 또 이상한게 패킷 두개만들어서, 아래 test패킷은 끝까지 괄호 잘나오더라, 위처럼 줄바꿈안해줘도.
 
+[ Packet Generator #4 ]
+지금까지 만들어온 패킷제너레이터는 성공적으로 완성했다. 그런데 이렇게 형성한 패킷구조를 수동으로 서버세션이랑 클라세션에 복붙해 알아먹게 하는게 너무 귀찮다.(사실 이걸 막으려고 제너레이터를 만든거기도하고)
+=> 각 프로젝트에 Packet이란 폴더를 만들고, 거기다가 GenPackets를 생성하게 하면된다. (폴더를 만든 이유는, 그냥 우리가 만든거라고 시각적으로 보기좋게 하려는 이유)
 
+프로젝트 - 속성 -빌드 를 통해 빌드시 파일이 생성될 위치를 조정가능.(이걸로 PDL.xml을 귀찮게 bin-dubug까지 가서 복붙해주지 않아도된다.)
+csproj파일에 가서 <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath> 를 추가해주면 netcoreapp3.1폴더 하에 빌드가 만들어지는걸 없앨수 있다.
+
+그리고 xml파일을 찾을때 경로를, string pdlPath = "../PDL.xml"; 로 넣어주면 ../이 뒤로 한폴더 나가라는 뜻이니, bin의 밖에 있는 PDL.xml을 찾을수있다.
+
+이제 목표는 PacketGenerator프로젝트를 실행시키면, 각 더미클라이언트, 서버 프로젝트의 Packet의 GenPackets.cs가 갱신되게 바꿔주면 된다.
+-> 방법은 다양한데, bat파일을 만들어서 해주는게 편하고 많이들쓴다. (배치파일은 windows에서 사용할수 있는 기능들을 자동으로 쓰게해주는데, 필요할때마다 구글링해서 써라)
+->우리의 목표는 PacketGenerator의 exe파일을 자동으로 누르게하는것
+
+배치파일에 START ../../PacketGenerator/bin/PacketGenerator.exe ../../PacketGenerator/PDL.xml 라고 써주면됨.
+이러면 ../../PacketGenerator/bin/PacketGenerator.exe로 프로젝트를 실행하고
+프로젝트의 Main에 ../../PacketGenerator/PDL.xml 라는 첫인자를 넣어준(args에 [0]을 넣어준) 것이다.
+
+이제 남은건 위 bat파일을 통해 만들어진 GenPackets.cs를 (bat파일이 있는곳에 만들어짐) 더미클라와 서버의 packet폴더로 보내는 것이다.
+이것도 찾아보면 bat에 XCOPY라는 명령어가 있으니 그걸쓰면된다.
+
+!위 과정이 굉장히 간단하면서도 효과적이였다. 이제 여러가지 작업을 한 후에, bat파일을 누르는것만으로 다른 프로젝트에도 복사해줄수있다.
+혹은 코드내에서 bat파일을 실행시켜서, 빌드과정에서 바로 복사시킬수도있다.
