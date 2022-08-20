@@ -115,3 +115,17 @@ csproj파일에 가서 <AppendTargetFrameworkToOutputPath>false</AppendTargetFra
 
 !위 과정이 굉장히 간단하면서도 효과적이였다. 이제 여러가지 작업을 한 후에, bat파일을 누르는것만으로 다른 프로젝트에도 복사해줄수있다.
 혹은 코드내에서 bat파일을 실행시켜서, 빌드과정에서 바로 복사시킬수도있다.
+
+[ Packet Generator #5 ]
+성능적인 개선을 해보자.
+ClientSession을 보면 case문에서 패킷id에따라 행동을 실행한다. 그런데 필요한 case문의 순서가 199번째에 있다면?  쓸모없는 198번의 비교를 할 수도 있다. 이런 낭비를 줄여보자
+모든 패킷의 부모되는 IPacket이라는 인터페이스를 만들어서 ushort Protocol 을 보내줌. (이게뭔데? = 패킷id를 보냄)
+그리고 PacketHandler를 만들어서, switch문에서 모든 case와 비교하는게 아니라, 핸들러cs파일에 있는 해당 함수를 한번 호출하게 하는것임(아까 Protocol로 보낸 패킷id를 보고)
+그리고 PacketManager에는 전달된 패킷을 읽는 기능을 넣을것이다. 그래서 Manager로 읽고, Handler로 처리하는것임. //결국 clientSession.cs에 OnRecvPacket의 내용을 옮긴것
+
+이렇게 만든 자동으로 패킷을 등록하고 호출할수있도록 만든 PacketManager도 PacketGenerator에서 자동으로 생성되게 해주면,
+PDL에 새로 추가해도, PacketHandler에서 그걸 처리할 함수(action)만 만들면 된다.
+
+[ Packet Generator #6 ]
+자동화를 해줄건데, 파일 크기가 크지않으니, GenPacket에 껴넣지말고 새로운 파일을 만들겠다. (물론 PacketFormat.cs에 코드를 넣을거라, 배치파일 하나만 돌리면 파일을 두개나오게 만들겠다는 뜻)
+앞으로는 새로운 패킷기능을 추가한다면, 전달과 비직렬화까진 다 구현했으니, 기능만 PacketHandler에 직접 코딩하면 된다.
